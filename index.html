@@ -252,7 +252,7 @@ const REGIONS = [
   { label: '北區', names: ['連國廷','謝明祥','洪裕銘'] },
   { label: '桃園', names: [], vacant: '目前缺人待補' },
   { label: '中區', names: ['徐瑞廷','何星諺'] },
-  { label: '南區', names: ['許峯閔','陳其宏','汪智廷'] },
+  { label: '南區', names: ['許峯閔','陳其宏'], vacant2: '缺區' },
 ];
 const NAMES = REGIONS.flatMap(r => r.names);
 const REGION_COLORS = { '北區':'#c0152a', '桃園':'#9b1c2e', '中區':'#e02035', '南區':'#b91c1c' };
@@ -418,7 +418,7 @@ function renderMain() {
               <div class="rank-bar-bg" style="flex:1"><div class="rank-bar" style="width:${Math.round(val/maxVal*100)}%;background:${rColor}"></div></div>
               <span class="rank-val">${dispVal}</span>
             </div>`;
-          }).join('');
+          }).join('') + (region.vacant2 ? `<div class="rank-row"><span style="font-size:12px;color:#9ca3af;font-style:italic">⚠ ${region.vacant2}</span></div>` : '');
       return `<div class="region-block">
         <div class="region-label" style="border-left:3px solid ${rColor}">${region.label}</div>
         ${rows}
@@ -460,7 +460,7 @@ function renderProgressBars(m) {
             <span class="ppct ${pClass}">${pLabel}</span>
             <span class="pval">${valStr}</span>
           </div>`;
-        }).join('');
+        }).join('') + (region.vacant2 ? `<div class="prow vacant-row"><span style="font-size:12px;color:#9ca3af;font-style:italic">⚠ ${region.vacant2}</span></div>` : '');
     return `<div class="region-block">
       <div class="region-label" style="border-left:3px solid ${rColor}">${region.label}</div>
       ${memberRows}
