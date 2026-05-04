@@ -151,7 +151,6 @@ body {
   padding: 8px 0; border-bottom: 1px solid #f3f4f6;
 }
 .rank-row:last-child { border-bottom: none; }
-.rank-num { font-size: 12px; color: var(--text3); font-family: 'DM Mono', monospace; min-width: 18px; }
 .rank-name { font-size: 13px; font-weight: 500; flex: 1; }
 .rank-bar-bg { width: 120px; height: 5px; background: #f3f4f6; border-radius: 3px; overflow: hidden; }
 .rank-bar { height: 100%; border-radius: 3px; }
@@ -171,17 +170,6 @@ body {
 
 /* ── no-target note ── */
 .note { font-size: 11px; color: var(--text3); margin-bottom: 12px; }
-
-/* ── config banner ── */
-.config-banner {
-  background: #fff7ed; border: 1px solid rgba(192,21,42,0.25);
-  border-radius: 8px; padding: 12px 16px; margin-bottom: 20px;
-  font-size: 13px; color: #9b1c2e; line-height: 1.6;
-}
-.config-banner code {
-  background: rgba(192,21,42,0.1); padding: 1px 6px; border-radius: 4px;
-  font-family: 'DM Mono', monospace; font-size: 12px;
-}
 
 /* ── footer ── */
 .footer {
@@ -207,19 +195,11 @@ body {
 
 <!-- ══════════════ MAIN ══════════════ -->
 <div class="main">
-
-  <!-- Config banner -->
-  <div class="config-banner" id="configBanner">
-    設定說明：請依照下方步驟建立 Google Apps Script，取得 Web App 網址後貼入 HTML 的 <code>APPS_SCRIPT_URL</code>，即可自動讀取 Sheets 資料。
-  </div>
-
   <div class="tabs" id="metricTabs"></div>
   <div class="summary-grid" id="summaryCards"></div>
-
   <div id="mainContent">
     <div class="state-box"><div class="spinner"></div><span>載入資料中...</span></div>
   </div>
-
 </div>
 
 <div class="footer">拉法業務日報系統 · 資料來源：Google Sheets · 每次開啟自動更新</div>
@@ -230,51 +210,43 @@ body {
 // ══════════════════════════════════════════════
 //  ★ 設定區：貼上你的 Apps Script Web App 網址
 // ══════════════════════════════════════════════
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyCGBVOtMrLwkSDJPdtQ307NBYvDTy4W0YosYWo3OVjenWIzrzZpXtUou3AeKRNtm0G/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbztC5saWYtk9_7QIm3QGrcyR-fBxruS1kfXa0M5AaAhBSj8E0zIXARtylXrNxfAr8pyJQ/exec';
 
 // ══════════════════════════════════════════════
 //  固定資料（Sheets 讀取失敗時的 fallback）
 // ══════════════════════════════════════════════
 const FALLBACK_RAW = [
-  {date:'04/01',name:'連國廷',orders:3,trad:126,chain:32,s2a_fam:50,s2a_grp:220,s2a_chain:1,recv:80000},
-  {date:'04/01',name:'何星諺',orders:2,trad:148,chain:58,s2a_fam:64,s2a_grp:445,s2a_chain:0,recv:5642},
-  {date:'04/01',name:'洪裕銘',orders:4,trad:147,chain:60,s2a_fam:32,s2a_grp:131,s2a_chain:1,recv:3120},
-  {date:'04/01',name:'徐瑞廷',orders:4,trad:110,chain:25,s2a_fam:57,s2a_grp:344,s2a_chain:2,recv:0},
-  {date:'04/01',name:'謝明祥',orders:3,trad:140,chain:47,s2a_fam:28,s2a_grp:161,s2a_chain:0,recv:6554},
-  {date:'04/01',name:'許峯閔',orders:3,trad:61,chain:0,s2a_fam:31,s2a_grp:178,s2a_chain:0,recv:0},
-  {date:'04/01',name:'陳其宏',orders:9,trad:116,chain:66,s2a_fam:54,s2a_grp:220,s2a_chain:5,recv:6554},
-  {date:'04/01',name:'汪智廷',orders:0,trad:0,chain:34,s2a_fam:0,s2a_grp:0,s2a_chain:0,recv:0},
-  {date:'04/09',name:'連國廷',orders:4,trad:133,chain:47,s2a_fam:59,s2a_grp:254,s2a_chain:3,recv:0},
-  {date:'04/09',name:'何星諺',orders:3,trad:148,chain:65,s2a_fam:73,s2a_grp:497,s2a_chain:1,recv:60000},
-  {date:'04/09',name:'洪裕銘',orders:4,trad:147,chain:67,s2a_fam:38,s2a_grp:166,s2a_chain:2,recv:0},
-  {date:'04/09',name:'徐瑞廷',orders:3,trad:110,chain:34,s2a_fam:62,s2a_grp:359,s2a_chain:2,recv:0},
-  {date:'04/09',name:'謝明祥',orders:3,trad:140,chain:59,s2a_fam:32,s2a_grp:188,s2a_chain:0,recv:0},
-  {date:'04/09',name:'許峯閔',orders:6,trad:125,chain:29,s2a_fam:32,s2a_grp:180,s2a_chain:0,recv:0},
-  {date:'04/09',name:'陳其宏',orders:4,trad:120,chain:79,s2a_fam:93,s2a_grp:349,s2a_chain:5,recv:1850},
-  {date:'04/09',name:'汪智廷',orders:4,trad:110,chain:34,s2a_fam:60,s2a_grp:221,s2a_chain:2,recv:740},
+  {date:'05/01',name:'連國廷',orders:3,static:5, bread:8, s2a_fam:12,s2a_grp:80, s2a_chain:2,recv:5000},
+  {date:'05/01',name:'謝明祥',orders:2,static:3, bread:6, s2a_fam:10,s2a_grp:60, s2a_chain:1,recv:3000},
+  {date:'05/01',name:'洪裕銘',orders:4,static:8, bread:10,s2a_fam:15,s2a_grp:100,s2a_chain:3,recv:8000},
+  {date:'05/01',name:'徐瑞廷',orders:2,static:4, bread:7, s2a_fam:11,s2a_grp:70, s2a_chain:2,recv:4000},
+  {date:'05/01',name:'何星諺',orders:1,static:2, bread:5, s2a_fam:8, s2a_grp:50, s2a_chain:1,recv:2000},
+  {date:'05/01',name:'許峯閔',orders:3,static:6, bread:9, s2a_fam:13,s2a_grp:90, s2a_chain:2,recv:6000},
+  {date:'05/01',name:'陳其宏',orders:2,static:5, bread:8, s2a_fam:12,s2a_grp:75, s2a_chain:3,recv:5500},
+  {date:'05/01',name:'汪智廷',orders:1,static:3, bread:6, s2a_fam:9, s2a_grp:55, s2a_chain:2,recv:3500},
 ];
 const FALLBACK_TARGETS = {
-  '連國廷':{trad:131,chain:48,s2a_fam:73,s2a_grp:487,s2a_chain:4},
-  '謝明祥':{trad:126,chain:71,s2a_fam:75,s2a_grp:487,s2a_chain:1},
-  '洪裕銘':{trad:147,chain:72,s2a_fam:84,s2a_grp:626,s2a_chain:5},
-  '徐瑞廷':{trad:98,chain:56,s2a_fam:73,s2a_grp:551,s2a_chain:2},
-  '何星諺':{trad:133,chain:90,s2a_fam:73,s2a_grp:487,s2a_chain:1},
-  '許峯閔':{trad:115,chain:null,s2a_fam:null,s2a_grp:null,s2a_chain:0},
-  '陳其宏':{trad:110,chain:74,s2a_fam:84,s2a_grp:487,s2a_chain:5},
-  '汪智廷':{trad:130,chain:90,s2a_fam:73,s2a_grp:487,s2a_chain:5},
+  '連國廷':{static:null,bread:null,s2a_fam:73, s2a_grp:487,s2a_chain:4},
+  '謝明祥':{static:null,bread:null,s2a_fam:75, s2a_grp:487,s2a_chain:2},
+  '洪裕銘':{static:null,bread:null,s2a_fam:84, s2a_grp:626,s2a_chain:5},
+  '徐瑞廷':{static:null,bread:null,s2a_fam:73, s2a_grp:551,s2a_chain:2},
+  '何星諺':{static:null,bread:null,s2a_fam:73, s2a_grp:487,s2a_chain:1},
+  '許峯閔':{static:null,bread:null,s2a_fam:76, s2a_grp:487,s2a_chain:3},
+  '陳其宏':{static:null,bread:null,s2a_fam:84, s2a_grp:487,s2a_chain:5},
+  '汪智廷':{static:null,bread:null,s2a_fam:73, s2a_grp:487,s2a_chain:5},
 };
 
 // ══════════════════════════════════════════════
 //  設定
 // ══════════════════════════════════════════════
 const METRICS = [
-  {key:'trad',    label:'無比陳列 傳統', unit:'家', hasTarget:true},
-  {key:'chain',   label:'無比陳列 連鎖', unit:'家', hasTarget:true},
-  {key:'s2a_fam', label:'S2A 傳統家數',  unit:'家', hasTarget:true},
-  {key:'s2a_grp', label:'S2A 傳統組數',  unit:'組', hasTarget:true},
-  {key:'s2a_chain',label:'S2A 連鎖家數', unit:'家', hasTarget:true},
-  {key:'orders',  label:'訂單數',         unit:'單', hasTarget:false},
-  {key:'recv',    label:'收款金額',        unit:'元', hasTarget:false},
+  {key:'static',    label:'無比靜電貼',       unit:'家', hasTarget:false},
+  {key:'bread',     label:'1~6月麵包超人',     unit:'家', hasTarget:true},
+  {key:'s2a_fam',   label:'S2A 傳統家數',      unit:'家', hasTarget:true},
+  {key:'s2a_grp',   label:'S2A 傳統組數',      unit:'組', hasTarget:true},
+  {key:'s2a_chain', label:'S2A 連鎖家數',      unit:'家', hasTarget:true},
+  {key:'orders',    label:'訂單數',            unit:'單', hasTarget:false},
+  {key:'recv',      label:'收款金額',           unit:'元', hasTarget:false},
 ];
 const REGIONS = [
   { label: '北區', names: ['連國廷','謝明祥','洪裕銘'] },
@@ -291,12 +263,11 @@ const COLORS = NAMES.map(n => {
 
 let RAW = FALLBACK_RAW;
 let TARGETS = FALLBACK_TARGETS;
-let activeMetric = 'trad';
+let activeMetric = 'static';
 let chartInst = null;
-let usingFallback = true;
 
 // ══════════════════════════════════════════════
-//  Google Sheets 讀取（透過 Apps Script Web App）
+//  Google Sheets 讀取
 // ══════════════════════════════════════════════
 async function loadData() {
   document.getElementById('lastUpdated').textContent = '更新中...';
@@ -306,13 +277,11 @@ async function loadData() {
     return;
   }
   try {
-    const res = await fetch(APPS_SCRIPT_URL);
+    const res = await fetch(APPS_SCRIPT_URL + '?t=' + Date.now());
     const json = await res.json();
     if (json.raw && json.targets) {
       RAW = json.raw;
       TARGETS = json.targets;
-      usingFallback = false;
-      document.getElementById('configBanner').style.display = 'none';
       document.getElementById('lastUpdated').textContent = '最後更新：' + new Date().toLocaleTimeString('zh-TW');
     } else {
       throw new Error('格式錯誤');
@@ -335,8 +304,9 @@ function getLatest(name, key) {
 function getSum(name, key) {
   return RAW.filter(r => r.name === name).reduce((acc, r) => acc + (r[key] || 0), 0);
 }
+// orders = 今日新增型（加總）；其餘累計型（抓最新）
 function getValue(name, key) {
-  return (key === 'orders' || key === 'recv') ? getSum(name, key) : getLatest(name, key);
+  return key === 'orders' ? getSum(name, key) : getLatest(name, key);
 }
 function getTarget(name, key) {
   return TARGETS[name]?.[key] ?? null;
@@ -360,12 +330,13 @@ function renderTabs() {
 function renderSummary() {
   const m = METRICS.find(x => x.key === activeMetric);
   let html = '';
+  const latestDate = RAW.length ? RAW.reduce((a,b) => a.date>b.date?a:b).date : '—';
+
   if (m.hasTarget) {
     let tv=0, tt=0;
     NAMES.forEach(n => { tv += getLatest(n,m.key); const t=getTarget(n,m.key); if(t) tt+=t; });
     const pct = tt > 0 ? Math.round(tv/tt*100) : 0;
     const above = NAMES.filter(n => { const v=getLatest(n,m.key),t=getTarget(n,m.key); return t&&v>=t; }).length;
-    const latestDate = RAW.length ? RAW.reduce((a,b) => a.date>b.date?a:b).date : '—';
     html = `
       <div class="scard teal">
         <div class="scard-label">整體達成率</div>
@@ -390,15 +361,24 @@ function renderSummary() {
       <div class="scard teal"><div class="scard-label">全隊累計訂單</div><div class="scard-val">${total}</div><div class="scard-sub">單（本月）</div></div>
       <div class="scard blue"><div class="scard-label">最多訂單</div><div class="scard-val">${max}</div><div class="scard-sub">${top}</div></div>
       <div class="scard amber"><div class="scard-label">人均訂單</div><div class="scard-val">${Math.round(total/NAMES.length)}</div><div class="scard-sub">單 / 人</div></div>`;
-  } else {
-    const total = NAMES.reduce((a,n) => a+getSum(n,'recv'), 0);
+  } else if (m.key === 'recv') {
+    const total = NAMES.reduce((a,n) => a+getLatest(n,'recv'), 0);
     const fmt = v => v>=10000 ? Math.round(v/10000)+'萬' : v.toLocaleString();
-    const max = Math.max(...NAMES.map(n => getSum(n,'recv')));
-    const top = NAMES.find(n => getSum(n,'recv') === max) || '—';
+    const max = Math.max(...NAMES.map(n => getLatest(n,'recv')));
+    const top = NAMES.find(n => getLatest(n,'recv') === max) || '—';
     html = `
       <div class="scard teal"><div class="scard-label">全隊累計收款</div><div class="scard-val" style="font-size:22px">${fmt(total)}</div><div class="scard-sub">元（本月）</div></div>
       <div class="scard blue"><div class="scard-label">最高收款</div><div class="scard-val" style="font-size:22px">${fmt(max)}</div><div class="scard-sub">${top}</div></div>
-      <div class="scard amber"><div class="scard-label">有收款人數</div><div class="scard-val">${NAMES.filter(n=>getSum(n,'recv')>0).length}</div><div class="scard-sub">人</div></div>`;
+      <div class="scard amber"><div class="scard-label">有收款人數</div><div class="scard-val">${NAMES.filter(n=>getLatest(n,'recv')>0).length}</div><div class="scard-sub">人</div></div>`;
+  } else {
+    // static（無比靜電貼）
+    const total = NAMES.reduce((a,n) => a+getLatest(n,'static'), 0);
+    const max = Math.max(...NAMES.map(n => getLatest(n,'static')));
+    const top = NAMES.find(n => getLatest(n,'static') === max) || '—';
+    html = `
+      <div class="scard teal"><div class="scard-label">全隊累計陳列</div><div class="scard-val">${total}</div><div class="scard-sub">家（本月）</div></div>
+      <div class="scard blue"><div class="scard-label">最多陳列</div><div class="scard-val">${max}</div><div class="scard-sub">${top}</div></div>
+      <div class="scard amber"><div class="scard-label">最新資料日期</div><div class="scard-val" style="font-size:20px">${latestDate}</div><div class="scard-sub">本月累計</div></div>`;
   }
   document.getElementById('summaryCards').innerHTML = html;
 }
@@ -417,24 +397,26 @@ function renderMain() {
         </div>
         <div class="panel">
           <div class="panel-title">累計值 vs 目標</div>
-          <div class="chart-wrap"><canvas id="myChart" role="img" aria-label="${m.label}達成比較圖"></canvas></div>
+          <div class="chart-wrap"><canvas id="myChart"></canvas></div>
         </div>
       </div>`;
     renderProgressBars(m);
     renderChart(m);
   } else {
-    const allData = NAMES.map(n => ({name:n, val:getValue(n,m.key)}));
-    const maxVal = Math.max(...allData.map(d=>d.val)) || 1;
+    const maxVal = Math.max(...NAMES.map(n => getValue(n,m.key))) || 1;
     const regionRows = REGIONS.map(region => {
       const rColor = REGION_COLORS[region.label];
       const rows = region.names.length === 0
         ? `<div class="rank-row"><span style="font-size:12px;color:#9ca3af;font-style:italic">${region.vacant||'待補'}</span></div>`
         : region.names.map(name => {
             const val = getValue(name, m.key);
+            const dispVal = m.key==='recv'
+              ? 'NT$ '+(val>=10000 ? Math.round(val/10000)+'萬' : val.toLocaleString())
+              : val+' '+m.unit;
             return `<div class="rank-row">
               <span class="rank-name" style="min-width:52px">${name}</span>
               <div class="rank-bar-bg" style="flex:1"><div class="rank-bar" style="width:${Math.round(val/maxVal*100)}%;background:${rColor}"></div></div>
-              <span class="rank-val">${m.key==='recv'?'NT$ '+val.toLocaleString():val+' '+m.unit}</span>
+              <span class="rank-val">${dispVal}</span>
             </div>`;
           }).join('');
       return `<div class="region-block">
@@ -445,12 +427,12 @@ function renderMain() {
     el.innerHTML = `
       <div class="panel">
         <div class="panel-title">${m.label} — 區域明細</div>
-        <p class="note">此指標無目標値，僅顯示累計數字</p>
+        <p class="note">此指標無目標值，僅顯示累計數字</p>
         ${regionRows}
       </div>
       <div class="panel" style="margin-top:16px">
         <div class="panel-title">長條圖比較</div>
-        <div class="chart-wrap"><canvas id="myChart" role="img" aria-label="${m.label}長條圖比較"></canvas></div>
+        <div class="chart-wrap"><canvas id="myChart"></canvas></div>
       </div>`;
     renderChart(m);
   }
@@ -491,16 +473,14 @@ function renderChart(m) {
   if (!canvas) return;
   const vals = NAMES.map(n => getValue(n, m.key));
   const tgts = m.hasTarget ? NAMES.map(n => getTarget(n, m.key) || 0) : null;
-  const datasets = [
-    {
-      label: '最新累計',
-      data: vals,
-      backgroundColor: NAMES.map((_,i) => COLORS[i] + '99'),
-      borderColor: COLORS,
-      borderWidth: 1,
-      borderRadius: 4,
-    }
-  ];
+  const datasets = [{
+    label: '最新累計',
+    data: vals,
+    backgroundColor: NAMES.map((_,i) => COLORS[i] + '99'),
+    borderColor: COLORS,
+    borderWidth: 1,
+    borderRadius: 4,
+  }];
   if (tgts) {
     datasets.push({
       label: '目標值',
