@@ -238,16 +238,16 @@ const FALLBACK_TARGETS = {
 //  設定
 // ══════════════════════════════════════════════
 const METRICS = [
-  {key:'sp_trad',   label:'改源特賣 傳統',     unit:'家', hasTarget:false},
-  {key:'sp_big',    label:'改源特賣 連鎖(大)', unit:'家', hasTarget:false},
-  {key:'sp_small',  label:'改源特賣 連鎖(小)', unit:'家', hasTarget:false},
-  {key:'static',    label:'無比靜電貼',         unit:'家', hasTarget:false},
-  {key:'bread',     label:'1~6月麵包超人',      unit:'家', hasTarget:true},
-  {key:'s2a_fam',   label:'S2A 傳統家數',       unit:'家', hasTarget:true},
-  {key:'s2a_grp',   label:'S2A 傳統組數',       unit:'組', hasTarget:true},
-  {key:'s2a_chain', label:'S2A 連鎖家數',       unit:'家', hasTarget:true},
   {key:'orders',    label:'訂單數',             unit:'單', hasTarget:false},
   {key:'recv',      label:'收款金額',            unit:'元', hasTarget:false},
+  {key:'sp_trad',   label:'改源特賣 傳統',      unit:'家', hasTarget:false},
+  {key:'sp_big',    label:'改源特賣 連鎖(大)',  unit:'家', hasTarget:false},
+  {key:'sp_small',  label:'改源特賣 連鎖(小)',  unit:'家', hasTarget:false},
+  {key:'static',    label:'無比靜電貼',          unit:'家', hasTarget:false},
+  {key:'bread',     label:'1~6月麵包超人',       unit:'家', hasTarget:true},
+  {key:'s2a_fam',   label:'S2A 傳統家數',        unit:'家', hasTarget:true},
+  {key:'s2a_grp',   label:'S2A 傳統組數',        unit:'組', hasTarget:true},
+  {key:'s2a_chain', label:'S2A 連鎖家數',        unit:'家', hasTarget:true},
 ];
 const REGIONS = [
   { label: '北區', names: ['連國廷','謝明祥','洪裕銘'] },
@@ -264,7 +264,7 @@ const COLORS = NAMES.map(n => {
 
 let RAW = FALLBACK_RAW;
 let TARGETS = FALLBACK_TARGETS;
-let activeMetric = 'sp_trad';
+let activeMetric = 'orders';
 let chartInst = null;
 
 // ══════════════════════════════════════════════
@@ -372,13 +372,13 @@ function renderSummary() {
       <div class="scard blue"><div class="scard-label">最高收款</div><div class="scard-val" style="font-size:22px">${fmt(max)}</div><div class="scard-sub">${top}</div></div>
       <div class="scard amber"><div class="scard-label">有收款人數</div><div class="scard-val">${NAMES.filter(n=>getLatest(n,'recv')>0).length}</div><div class="scard-sub">人</div></div>`;
   } else {
-    // static（無比靜電貼）
-    const total = NAMES.reduce((a,n) => a+getLatest(n,'static'), 0);
-    const max = Math.max(...NAMES.map(n => getLatest(n,'static')));
-    const top = NAMES.find(n => getLatest(n,'static') === max) || '—';
+    // 無目標累計型（改源特賣三項、靜電貼等）
+    const total = NAMES.reduce((a,n) => a+getLatest(n,m.key), 0);
+    const max = Math.max(...NAMES.map(n => getLatest(n,m.key)));
+    const top = NAMES.find(n => getLatest(n,m.key) === max) || '—';
     html = `
-      <div class="scard teal"><div class="scard-label">全隊累計陳列</div><div class="scard-val">${total}</div><div class="scard-sub">家（本月）</div></div>
-      <div class="scard blue"><div class="scard-label">最多陳列</div><div class="scard-val">${max}</div><div class="scard-sub">${top}</div></div>
+      <div class="scard teal"><div class="scard-label">全隊累計</div><div class="scard-val">${total}</div><div class="scard-sub">家（本月）</div></div>
+      <div class="scard blue"><div class="scard-label">最多</div><div class="scard-val">${max}</div><div class="scard-sub">${top}</div></div>
       <div class="scard amber"><div class="scard-label">最新資料日期</div><div class="scard-val" style="font-size:20px">${latestDate}</div><div class="scard-sub">本月累計</div></div>`;
   }
   document.getElementById('summaryCards').innerHTML = html;
