@@ -210,43 +210,44 @@ body {
 // ══════════════════════════════════════════════
 //  ★ 設定區：貼上你的 Apps Script Web App 網址
 // ══════════════════════════════════════════════
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbztC5saWYtk9_7QIm3QGrcyR-fBxruS1kfXa0M5AaAhBSj8E0zIXARtylXrNxfAr8pyJQ/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby4hAx3QsnOTtGVieeWNxA8QoNBUWCJ-o8Cyr84Yfe81goyhHAdZp9bAI3y2qejToGpFg/exec';
 
 // ══════════════════════════════════════════════
 //  固定資料（Sheets 讀取失敗時的 fallback）
 // ══════════════════════════════════════════════
 const FALLBACK_RAW = [
-  {date:'05/01',name:'連國廷',orders:3,static:5, bread:8, s2a_fam:12,s2a_grp:80, s2a_chain:2,recv:5000},
-  {date:'05/01',name:'謝明祥',orders:2,static:3, bread:6, s2a_fam:10,s2a_grp:60, s2a_chain:1,recv:3000},
-  {date:'05/01',name:'洪裕銘',orders:4,static:8, bread:10,s2a_fam:15,s2a_grp:100,s2a_chain:3,recv:8000},
-  {date:'05/01',name:'徐瑞廷',orders:2,static:4, bread:7, s2a_fam:11,s2a_grp:70, s2a_chain:2,recv:4000},
-  {date:'05/01',name:'何星諺',orders:1,static:2, bread:5, s2a_fam:8, s2a_grp:50, s2a_chain:1,recv:2000},
-  {date:'05/01',name:'許峯閔',orders:3,static:6, bread:9, s2a_fam:13,s2a_grp:90, s2a_chain:2,recv:6000},
-  {date:'05/01',name:'陳其宏',orders:2,static:5, bread:8, s2a_fam:12,s2a_grp:75, s2a_chain:3,recv:5500},
-  {date:'05/01',name:'汪智廷',orders:1,static:3, bread:6, s2a_fam:9, s2a_grp:55, s2a_chain:2,recv:3500},
+  {date:'05/01',name:'連國廷',orders:3,sp_trad:5,sp_big:2,sp_small:1,static:5, bread:8, s2a_fam:12,s2a_grp:80, s2a_chain:2,recv_day:0,recv:5000},
+  {date:'05/01',name:'謝明祥',orders:2,sp_trad:3,sp_big:1,sp_small:0,static:3, bread:6, s2a_fam:10,s2a_grp:60, s2a_chain:1,recv_day:0,recv:3000},
+  {date:'05/01',name:'洪裕銘',orders:4,sp_trad:8,sp_big:3,sp_small:2,static:8, bread:10,s2a_fam:15,s2a_grp:100,s2a_chain:3,recv_day:0,recv:8000},
+  {date:'05/01',name:'徐瑞廷',orders:2,sp_trad:4,sp_big:2,sp_small:1,static:4, bread:7, s2a_fam:11,s2a_grp:70, s2a_chain:2,recv_day:0,recv:4000},
+  {date:'05/01',name:'何星諺',orders:1,sp_trad:2,sp_big:1,sp_small:0,static:2, bread:5, s2a_fam:8, s2a_grp:50, s2a_chain:1,recv_day:0,recv:2000},
+  {date:'05/01',name:'許峯閔',orders:3,sp_trad:6,sp_big:2,sp_small:1,static:6, bread:9, s2a_fam:13,s2a_grp:90, s2a_chain:2,recv_day:0,recv:6000},
+  {date:'05/01',name:'陳其宏',orders:2,sp_trad:5,sp_big:3,sp_small:1,static:5, bread:8, s2a_fam:12,s2a_grp:75, s2a_chain:3,recv_day:0,recv:5500},
 ];
 const FALLBACK_TARGETS = {
-  '連國廷':{static:null,bread:null,s2a_fam:73, s2a_grp:487,s2a_chain:4},
-  '謝明祥':{static:null,bread:null,s2a_fam:75, s2a_grp:487,s2a_chain:2},
-  '洪裕銘':{static:null,bread:null,s2a_fam:84, s2a_grp:626,s2a_chain:5},
-  '徐瑞廷':{static:null,bread:null,s2a_fam:73, s2a_grp:551,s2a_chain:2},
-  '何星諺':{static:null,bread:null,s2a_fam:73, s2a_grp:487,s2a_chain:1},
-  '許峯閔':{static:null,bread:null,s2a_fam:76, s2a_grp:487,s2a_chain:3},
-  '陳其宏':{static:null,bread:null,s2a_fam:84, s2a_grp:487,s2a_chain:5},
-  '汪智廷':{static:null,bread:null,s2a_fam:73, s2a_grp:487,s2a_chain:5},
+  '連國廷':{sp_trad:null,sp_big:null,sp_small:null,static:null,bread:null,s2a_fam:73, s2a_grp:487,s2a_chain:4},
+  '謝明祥':{sp_trad:null,sp_big:null,sp_small:null,static:null,bread:null,s2a_fam:75, s2a_grp:487,s2a_chain:2},
+  '洪裕銘':{sp_trad:null,sp_big:null,sp_small:null,static:null,bread:null,s2a_fam:84, s2a_grp:626,s2a_chain:5},
+  '徐瑞廷':{sp_trad:null,sp_big:null,sp_small:null,static:null,bread:null,s2a_fam:73, s2a_grp:551,s2a_chain:2},
+  '何星諺':{sp_trad:null,sp_big:null,sp_small:null,static:null,bread:null,s2a_fam:73, s2a_grp:487,s2a_chain:1},
+  '許峯閔':{sp_trad:null,sp_big:null,sp_small:null,static:null,bread:null,s2a_fam:76, s2a_grp:487,s2a_chain:3},
+  '陳其宏':{sp_trad:null,sp_big:null,sp_small:null,static:null,bread:null,s2a_fam:84, s2a_grp:487,s2a_chain:5},
 };
 
 // ══════════════════════════════════════════════
 //  設定
 // ══════════════════════════════════════════════
 const METRICS = [
-  {key:'static',    label:'無比靜電貼',       unit:'家', hasTarget:false},
-  {key:'bread',     label:'1~6月麵包超人',     unit:'家', hasTarget:true},
-  {key:'s2a_fam',   label:'S2A 傳統家數',      unit:'家', hasTarget:true},
-  {key:'s2a_grp',   label:'S2A 傳統組數',      unit:'組', hasTarget:true},
-  {key:'s2a_chain', label:'S2A 連鎖家數',      unit:'家', hasTarget:true},
-  {key:'orders',    label:'訂單數',            unit:'單', hasTarget:false},
-  {key:'recv',      label:'收款金額',           unit:'元', hasTarget:false},
+  {key:'sp_trad',   label:'改源特賣 傳統',     unit:'家', hasTarget:false},
+  {key:'sp_big',    label:'改源特賣 連鎖(大)', unit:'家', hasTarget:false},
+  {key:'sp_small',  label:'改源特賣 連鎖(小)', unit:'家', hasTarget:false},
+  {key:'static',    label:'無比靜電貼',         unit:'家', hasTarget:false},
+  {key:'bread',     label:'1~6月麵包超人',      unit:'家', hasTarget:true},
+  {key:'s2a_fam',   label:'S2A 傳統家數',       unit:'家', hasTarget:true},
+  {key:'s2a_grp',   label:'S2A 傳統組數',       unit:'組', hasTarget:true},
+  {key:'s2a_chain', label:'S2A 連鎖家數',       unit:'家', hasTarget:true},
+  {key:'orders',    label:'訂單數',             unit:'單', hasTarget:false},
+  {key:'recv',      label:'收款金額',            unit:'元', hasTarget:false},
 ];
 const REGIONS = [
   { label: '北區', names: ['連國廷','謝明祥','洪裕銘'] },
@@ -263,7 +264,7 @@ const COLORS = NAMES.map(n => {
 
 let RAW = FALLBACK_RAW;
 let TARGETS = FALLBACK_TARGETS;
-let activeMetric = 'static';
+let activeMetric = 'sp_trad';
 let chartInst = null;
 
 // ══════════════════════════════════════════════
