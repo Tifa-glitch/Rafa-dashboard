@@ -338,6 +338,7 @@ function renderSummary() {
     NAMES.forEach(n => { tv += getLatest(n,m.key); const t=getTarget(n,m.key); if(t) tt+=t; });
     const pct = tt > 0 ? Math.round(tv/tt*100) : 0;
     const above = NAMES.filter(n => { const v=getLatest(n,m.key),t=getTarget(n,m.key); return t&&v>=t; }).length;
+    const avg1 = NAMES.length > 0 ? Math.round(tv / NAMES.length) : 0;
     html = `
       <div class="scard teal">
         <div class="scard-label">整體達成率</div>
@@ -348,6 +349,11 @@ function renderSummary() {
         <div class="scard-label">已達標人數</div>
         <div class="scard-val">${above}<span style="font-size:16px;color:var(--text3)"> / ${NAMES.length}</span></div>
         <div class="scard-sub">人達目標</div>
+      </div>
+      <div class="scard amber">
+        <div class="scard-label">人均</div>
+        <div class="scard-val">${avg1}</div>
+        <div class="scard-sub">${m.unit} / 人</div>
       </div>
       <div class="scard amber">
         <div class="scard-label">最新資料日期</div>
@@ -361,7 +367,8 @@ function renderSummary() {
     html = `
       <div class="scard teal"><div class="scard-label">全隊累計訂單</div><div class="scard-val">${total}</div><div class="scard-sub">單（本月）</div></div>
       <div class="scard blue"><div class="scard-label">最多訂單</div><div class="scard-val">${max}</div><div class="scard-sub">${top}</div></div>
-      <div class="scard amber"><div class="scard-label">人均訂單</div><div class="scard-val">${Math.round(total/NAMES.length)}</div><div class="scard-sub">單 / 人</div></div>`;
+      <div class="scard amber"><div class="scard-label">人均訂單</div><div class="scard-val">${Math.round(total/NAMES.length)}</div><div class="scard-sub">單 / 人</div></div>
+      <div class="scard amber"><div class="scard-label">最新資料日期</div><div class="scard-val" style="font-size:20px">${latestDate}</div><div class="scard-sub">本月累計</div></div>`;
   } else if (m.key === 'recv') {
     const total = NAMES.reduce((a,n) => a+getLatest(n,'recv'), 0);
     const fmt = v => v>=10000 ? Math.round(v/10000)+'萬' : v.toLocaleString();
@@ -370,15 +377,18 @@ function renderSummary() {
     html = `
       <div class="scard teal"><div class="scard-label">全隊累計收款</div><div class="scard-val" style="font-size:22px">${fmt(total)}</div><div class="scard-sub">元（本月）</div></div>
       <div class="scard blue"><div class="scard-label">最高收款</div><div class="scard-val" style="font-size:22px">${fmt(max)}</div><div class="scard-sub">${top}</div></div>
+      <div class="scard amber"><div class="scard-label">人均收款</div><div class="scard-val" style="font-size:22px">${fmt(Math.round(total/NAMES.length))}</div><div class="scard-sub">元 / 人</div></div>
       <div class="scard amber"><div class="scard-label">有收款人數</div><div class="scard-val">${NAMES.filter(n=>getLatest(n,'recv')>0).length}</div><div class="scard-sub">人</div></div>`;
   } else {
     // 無目標累計型（改源特賣三項、靜電貼等）
     const total = NAMES.reduce((a,n) => a+getLatest(n,m.key), 0);
     const max = Math.max(...NAMES.map(n => getLatest(n,m.key)));
     const top = NAMES.find(n => getLatest(n,m.key) === max) || '—';
+    const avgElse = NAMES.length > 0 ? Math.round(total / NAMES.length) : 0;
     html = `
       <div class="scard teal"><div class="scard-label">全隊累計</div><div class="scard-val">${total}</div><div class="scard-sub">家（本月）</div></div>
       <div class="scard blue"><div class="scard-label">最多</div><div class="scard-val">${max}</div><div class="scard-sub">${top}</div></div>
+      <div class="scard amber"><div class="scard-label">人均</div><div class="scard-val">${avgElse}</div><div class="scard-sub">${m.unit} / 人</div></div>
       <div class="scard amber"><div class="scard-label">最新資料日期</div><div class="scard-val" style="font-size:20px">${latestDate}</div><div class="scard-sub">本月累計</div></div>`;
   }
   document.getElementById('summaryCards').innerHTML = html;
