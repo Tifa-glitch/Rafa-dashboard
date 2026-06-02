@@ -216,13 +216,15 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvPvrpXaXHCSSg
 //  固定資料（Sheets 讀取失敗時的 fallback）
 // ══════════════════════════════════════════════
 const FALLBACK_RAW = [
-  {date:'06/01',name:'連國廷',orders:3,sp_trad:2,sp_big:0,sp_small:0,static:10,bread:2,recv_day:0,recv:5000},
-  {date:'06/01',name:'謝明祥',orders:2,sp_trad:1,sp_big:0,sp_small:0,static:8, bread:1,recv_day:0,recv:8000},
-  {date:'06/01',name:'洪裕銘',orders:4,sp_trad:3,sp_big:0,sp_small:0,static:12,bread:3,recv_day:0,recv:12000},
-  {date:'06/01',name:'徐瑞廷',orders:5,sp_trad:5,sp_big:0,sp_small:1,static:15,bread:4,recv_day:0,recv:15000},
-  {date:'06/01',name:'何星諺',orders:3,sp_trad:4,sp_big:0,sp_small:1,static:9, bread:2,recv_day:0,recv:7000},
-  {date:'06/01',name:'許峯閔',orders:2,sp_trad:2,sp_big:0,sp_small:1,static:7, bread:1,recv_day:0,recv:6000},
-  {date:'06/01',name:'陳其宏',orders:6,sp_trad:6,sp_big:1,sp_small:0,static:20,bread:5,recv_day:0,recv:20000},
+  {date:'06/01',name:'連國廷',orders:3,sale_trad:2,sale_chain_big:0,sale_chain_sm:0,static:10,bread:2,recv_today:0,recv:5000},
+  {date:'06/01',name:'謝明祥',orders:2,sale_trad:1,sale_chain_big:0,sale_chain_sm:0,static:8, bread:1,recv_today:0,recv:8000},
+  {date:'06/01',name:'洪裕銘',orders:4,sale_trad:3,sale_chain_big:0,sale_chain_sm:0,static:12,bread:3,recv_today:0,recv:12000},
+  {date:'06/01',name:'曾瑞真',orders:1,sale_trad:0,sale_chain_big:0,sale_chain_sm:0,static:0, bread:0,recv_today:0,recv:0},
+  {date:'06/01',name:'徐瑞廷',orders:5,sale_trad:5,sale_chain_big:0,sale_chain_sm:1,static:15,bread:4,recv_today:0,recv:15000},
+  {date:'06/01',name:'何星諺',orders:3,sale_trad:4,sale_chain_big:0,sale_chain_sm:1,static:9, bread:2,recv_today:0,recv:7000},
+  {date:'06/01',name:'許峯閔',orders:2,sale_trad:2,sale_chain_big:0,sale_chain_sm:1,static:7, bread:1,recv_today:0,recv:6000},
+  {date:'06/01',name:'陳其宏',orders:6,sale_trad:6,sale_chain_big:1,sale_chain_sm:0,static:20,bread:5,recv_today:0,recv:20000},
+  {date:'06/01',name:'黃翎婕',orders:1,sale_trad:0,sale_chain_big:0,sale_chain_sm:0,static:0, bread:0,recv_today:0,recv:0},
 ];
 const FALLBACK_TARGETS = {
   '連國廷':{bread:24},
@@ -240,13 +242,13 @@ const FALLBACK_TARGETS = {
 //  設定
 // ══════════════════════════════════════════════
 const METRICS = [
-  {key:'recv',         label:'收款金額',          unit:'元', hasTarget:false},
-  {key:'orders',       label:'訂單數',             unit:'單', hasTarget:false},
-  {key:'bread',        label:'1~6月麵包超人',      unit:'家', hasTarget:true},
-  {key:'static',       label:'無比靜電貼',          unit:'家', hasTarget:false},
-  {key:'sp_trad',      label:'改源特賣 傳統',      unit:'家', hasTarget:false},
-  {key:'sp_big',       label:'改源特賣 連鎖(大)',  unit:'家', hasTarget:false},
-  {key:'sp_small',     label:'改源特賣 連鎖(小)',  unit:'家', hasTarget:false},
+  {key:'recv',           label:'收款金額',          unit:'元', hasTarget:false},
+  {key:'orders',         label:'訂單數',             unit:'單', hasTarget:false},
+  {key:'bread',          label:'1~6月麵包超人',      unit:'家', hasTarget:true},
+  {key:'static',         label:'無比靜電貼',          unit:'家', hasTarget:false},
+  {key:'sale_trad',      label:'改源特賣 傳統',      unit:'家', hasTarget:false},
+  {key:'sale_chain_big', label:'改源特賣 連鎖(大)',  unit:'家', hasTarget:false},
+  {key:'sale_chain_sm',  label:'改源特賣 連鎖(小)',  unit:'家', hasTarget:false},
 ];
 const REGIONS = [
   { label: '北區', names: ['連國廷','謝明祥','洪裕銘'] },
@@ -529,5 +531,6 @@ loadData();
 </script>
 </body>
 </html>
+
 
 
