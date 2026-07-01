@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>拉法業務日報 Dashboard — 6月</title>
+<title>拉法業務日報 Dashboard — 7月</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -184,7 +184,7 @@ body {
 <div class="topbar">
   <div class="topbar-left">
     <div class="logo-dot"></div>
-    <span class="topbar-title">拉法業務日報 — 6月</span>
+    <span class="topbar-title">拉法業務日報 — 7月</span>
     <span class="topbar-sub">DASHBOARD</span>
   </div>
   <div style="display:flex;align-items:center;gap:12px">
@@ -210,45 +210,42 @@ body {
 // ══════════════════════════════════════════════
 //  ★ 設定區：貼上你的 Apps Script Web App 網址
 // ══════════════════════════════════════════════
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvPvrpXaXHCSSg1BuyZbmBQjScpSAzLMfN3-gnTFQDSbbsIshsMyHqeNvNiyyvPP3OoQ/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx-WTHO_gl0S4LO6cJLWDgrlYzICKoVU_YcA8zCsubR_rPgZlQmbz_262wBSmrc00lSGg/exec';
 
 // ══════════════════════════════════════════════
 //  固定資料（Sheets 讀取失敗時的 fallback）
 // ══════════════════════════════════════════════
 const FALLBACK_RAW = [
-  {date:'06/01',name:'連國廷',orders:3,sale_trad:2,sale_chain_big:0,sale_chain_sm:0,static:10,bread:2,recv_today:0,recv:5000},
-  {date:'06/01',name:'謝明祥',orders:2,sale_trad:1,sale_chain_big:0,sale_chain_sm:0,static:8, bread:1,recv_today:0,recv:8000},
-  {date:'06/01',name:'洪裕銘',orders:4,sale_trad:3,sale_chain_big:0,sale_chain_sm:0,static:12,bread:3,recv_today:0,recv:12000},
-  {date:'06/01',name:'曾瑞真',orders:1,sale_trad:0,sale_chain_big:0,sale_chain_sm:0,static:0, bread:0,recv_today:0,recv:0},
-  {date:'06/01',name:'徐瑞廷',orders:5,sale_trad:5,sale_chain_big:0,sale_chain_sm:1,static:15,bread:4,recv_today:0,recv:15000},
-  {date:'06/01',name:'何星諺',orders:3,sale_trad:4,sale_chain_big:0,sale_chain_sm:1,static:9, bread:2,recv_today:0,recv:7000},
-  {date:'06/01',name:'許峯閔',orders:2,sale_trad:2,sale_chain_big:0,sale_chain_sm:1,static:7, bread:1,recv_today:0,recv:6000},
-  {date:'06/01',name:'陳其宏',orders:6,sale_trad:6,sale_chain_big:1,sale_chain_sm:0,static:20,bread:5,recv_today:0,recv:20000},
-  {date:'06/01',name:'黃翎婕',orders:1,sale_trad:0,sale_chain_big:0,sale_chain_sm:0,static:0, bread:0,recv_today:0,recv:0},
+  {date:'07/01',name:'連國廷',orders:3,contract:2, bread:2, recv_today:0,recv:5000},
+  {date:'07/01',name:'謝明祥',orders:2,contract:1, bread:1, recv_today:0,recv:8000},
+  {date:'07/01',name:'洪裕銘',orders:4,contract:3, bread:3, recv_today:0,recv:12000},
+  {date:'07/01',name:'曾瑞真',orders:1,contract:0, bread:0, recv_today:0,recv:0},
+  {date:'07/01',name:'徐瑞廷',orders:5,contract:5, bread:4, recv_today:0,recv:15000},
+  {date:'07/01',name:'何星諺',orders:3,contract:4, bread:2, recv_today:0,recv:7000},
+  {date:'07/01',name:'許峯閔',orders:2,contract:2, bread:1, recv_today:0,recv:6000},
+  {date:'07/01',name:'陳其宏',orders:6,contract:6, bread:5, recv_today:0,recv:20000},
+  {date:'07/01',name:'黃翎婕',orders:1,contract:0, bread:0, recv_today:0,recv:0},
 ];
 const FALLBACK_TARGETS = {
-  '連國廷':{bread:24},
-  '謝明祥':{bread:24},
-  '洪裕銘':{bread:31},
-  '曾瑞真':{bread:28},
-  '徐瑞廷':{bread:24},
-  '何星諺':{bread:24},
-  '許峯閔':{bread:24},
-  '陳其宏':{bread:29},
-  '黃翎婕':{bread:38},
+  '連國廷':{bread:18},
+  '謝明祥':{bread:18},
+  '洪裕銘':{bread:18},
+  '曾瑞真':{bread:18},
+  '徐瑞廷':{bread:18},
+  '何星諺':{bread:18},
+  '許峯閔':{bread:18},
+  '陳其宏':{bread:18},
+  '黃翎婕':{bread:18},
 };
 
 // ══════════════════════════════════════════════
 //  設定
 // ══════════════════════════════════════════════
 const METRICS = [
-  {key:'recv',           label:'收款金額',          unit:'元', hasTarget:false},
-  {key:'orders',         label:'訂單數',             unit:'單', hasTarget:false},
-  {key:'bread',          label:'1~6月麵包超人',      unit:'家', hasTarget:true},
-  {key:'static',         label:'無比靜電貼',          unit:'家', hasTarget:false},
-  {key:'sale_trad',      label:'改源特賣 傳統',      unit:'家', hasTarget:false},
-  {key:'sale_chain_big', label:'改源特賣 連鎖(大)',  unit:'家', hasTarget:false},
-  {key:'sale_chain_sm',  label:'改源特賣 連鎖(小)',  unit:'家', hasTarget:false},
+  {key:'recv',     label:'收款金額',    unit:'元', hasTarget:false},
+  {key:'orders',   label:'訂單數',      unit:'單', hasTarget:false},
+  {key:'bread',    label:'1~8月麵包超人', unit:'家', hasTarget:true},
+  {key:'contract', label:'改源合約家數', unit:'家', hasTarget:false},
 ];
 const REGIONS = [
   { label: '北區', names: ['連國廷','謝明祥','洪裕銘'] },
@@ -308,7 +305,7 @@ function getSum(name, key) {
 }
 // orders = 今日新增型（加總）；recv 及其餘累計型（抓最新）
 function getValue(name, key) {
-  return key === 'orders' ? getSum(name, key) : getLatest(name, key);
+  return getSum(name, key);
 }
 function getTarget(name, key) {
   return TARGETS[name]?.[key] ?? null;
@@ -336,9 +333,9 @@ function renderSummary() {
 
   if (m.hasTarget) {
     let tv=0, tt=0;
-    NAMES.forEach(n => { tv += getLatest(n,m.key); const t=getTarget(n,m.key); if(t) tt+=t; });
+    NAMES.forEach(n => { tv += getSum(n,m.key); const t=getTarget(n,m.key); if(t) tt+=t; });
     const pct = tt > 0 ? Math.round(tv/tt*100) : 0;
-    const above = NAMES.filter(n => { const v=getLatest(n,m.key),t=getTarget(n,m.key); return t&&v>=t; }).length;
+    const above = NAMES.filter(n => { const v=getSum(n,m.key),t=getTarget(n,m.key); return t&&v>=t; }).length;
     const avg = NAMES.length ? (tv / NAMES.length).toFixed(1) : 0;
     html = `
       <div class="scard teal">
@@ -371,20 +368,19 @@ function renderSummary() {
       <div class="scard blue"><div class="scard-label">最多訂單</div><div class="scard-val">${max}</div><div class="scard-sub">${top}</div></div>
       <div class="scard amber"><div class="scard-label">人均訂單</div><div class="scard-val">${avg}</div><div class="scard-sub">單 / 人</div></div>`;
   } else if (m.key === 'recv') {
-    const total = NAMES.reduce((a,n) => a+getLatest(n,'recv'), 0);
+    const total = NAMES.reduce((a,n) => a+getSum(n,'recv'), 0);
     const fmt = v => v>=10000 ? (v/10000).toFixed(1)+'萬' : v.toLocaleString();
-    const max = Math.max(...NAMES.map(n => getLatest(n,'recv')));
-    const top = NAMES.find(n => getLatest(n,'recv') === max) || '—';
+    const max = Math.max(...NAMES.map(n => getSum(n,'recv')));
+    const top = NAMES.find(n => getSum(n,'recv') === max) || '—';
     const avg = NAMES.length ? total / NAMES.length : 0;
     html = `
       <div class="scard teal"><div class="scard-label">全隊累計收款</div><div class="scard-val" style="font-size:22px">${fmt(total)}</div><div class="scard-sub">元（本月）</div></div>
       <div class="scard blue"><div class="scard-label">最高收款</div><div class="scard-val" style="font-size:22px">${fmt(max)}</div><div class="scard-sub">${top}</div></div>
       <div class="scard amber"><div class="scard-label">人均收款</div><div class="scard-val" style="font-size:22px">${fmt(avg)}</div><div class="scard-sub">元 / 人</div></div>`;
   } else {
-    // 無目標累計型（改源特賣三項、靜電貼等）
-    const total = NAMES.reduce((a,n) => a+getLatest(n,m.key), 0);
-    const max = Math.max(...NAMES.map(n => getLatest(n,m.key)));
-    const top = NAMES.find(n => getLatest(n,m.key) === max) || '—';
+    const total = NAMES.reduce((a,n) => a+getSum(n,m.key), 0);
+    const max = Math.max(...NAMES.map(n => getSum(n,m.key)));
+    const top = NAMES.find(n => getSum(n,m.key) === max) || '—';
     const avg = NAMES.length ? (total / NAMES.length).toFixed(1) : 0;
     html = `
       <div class="scard teal"><div class="scard-label">全隊累計</div><div class="scard-val">${total}</div><div class="scard-sub">${m.unit}（本月）</div></div>
@@ -531,6 +527,5 @@ loadData();
 </script>
 </body>
 </html>
-
 
 
