@@ -209,9 +209,8 @@ body {
 <script>
 // ══════════════════════════════════════════════
 //  ★ 設定區：貼上你的 Apps Script Web App 網址
-//  （手動輸入版：資料來源改為「日報輸入」分頁，部署新 Apps Script 後請替換下方網址）
 // ══════════════════════════════════════════════
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxc-0csov4khK6GY7wOZFKPNJSnJjBt4Doux9vX6tnIK-BxlYw412JiuVLg1FSM6rGh/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx-WTHO_gl0S4LO6cJLWDgrlYzICKoVU_YcA8zCsubR_rPgZlQmbz_262wBSmrc00lSGg/exec';
 
 // ══════════════════════════════════════════════
 //  固定資料（Sheets 讀取失敗時的 fallback）
@@ -304,10 +303,9 @@ function getLatest(name, key) {
 function getSum(name, key) {
   return RAW.filter(r => r.name === name).reduce((acc, r) => acc + (r[key] || 0), 0);
 }
-// orders = 今日新增型（加總）；recv / contract / bread 為累計型（抓最新一筆）
-const CUMULATIVE_KEYS = ['recv', 'contract', 'bread'];
+// orders = 今日新增型（加總）；recv 及其餘累計型（抓最新）
 function getValue(name, key) {
-  return CUMULATIVE_KEYS.includes(key) ? getLatest(name, key) : getSum(name, key);
+  return getSum(name, key);
 }
 function getTarget(name, key) {
   return TARGETS[name]?.[key] ?? null;
@@ -335,9 +333,9 @@ function renderSummary() {
 
   if (m.hasTarget) {
     let tv=0, tt=0;
-    NAMES.forEach(n => { tv += getValue(n,m.key); const t=getTarget(n,m.key); if(t) tt+=t; });
+    NAMES.forEach(n => { tv += getSum(n,m.key); const t=getTarget(n,m.key); if(t) tt+=t; });
     const pct = tt > 0 ? Math.round(tv/tt*100) : 0;
-    const above = NAMES.filter(n => { const v=getValue(n,m.key),t=getTarget(n,m.key); return t&&v>=t; }).length;
+    const above = NAMES.filter(n => { const v=getSum(n,m.key),t=getTarget(n,m.key); return t&&v>=t; }).length;
     const avg = NAMES.length ? (tv / NAMES.length).toFixed(1) : 0;
     html = `
       <div class="scard teal">
@@ -370,19 +368,19 @@ function renderSummary() {
       <div class="scard blue"><div class="scard-label">最多訂單</div><div class="scard-val">${max}</div><div class="scard-sub">${top}</div></div>
       <div class="scard amber"><div class="scard-label">人均訂單</div><div class="scard-val">${avg}</div><div class="scard-sub">單 / 人</div></div>`;
   } else if (m.key === 'recv') {
-    const total = NAMES.reduce((a,n) => a+getValue(n,'recv'), 0);
-    const fmt = v => v>=10000 ? (v/10000).toFixed(1)+'萬' : v.toLocaleString();
-    const max = Math.max(...NAMES.map(n => getValue(n,'recv')));
-    const top = NAMES.find(n => getValue(n,'recv') === max) || '—';
+    const total = NAMES.reduce((a,n) => a+getSum(n,'recv'), 0);
+    const fmt = v => v>=10000 ? (v/10000).toFixed(1)+'萬' : v.toLocaleString(undefined,{maximumFractionDigits:1});
+    const max = Math.max(...NAMES.map(n => getSum(n,'recv')));
+    const top = NAMES.find(n => getSum(n,'recv') === max) || '—';
     const avg = NAMES.length ? total / NAMES.length : 0;
     html = `
       <div class="scard teal"><div class="scard-label">全隊累計收款</div><div class="scard-val" style="font-size:22px">${fmt(total)}</div><div class="scard-sub">元（本月）</div></div>
       <div class="scard blue"><div class="scard-label">最高收款</div><div class="scard-val" style="font-size:22px">${fmt(max)}</div><div class="scard-sub">${top}</div></div>
       <div class="scard amber"><div class="scard-label">人均收款</div><div class="scard-val" style="font-size:22px">${fmt(avg)}</div><div class="scard-sub">元 / 人</div></div>`;
   } else {
-    const total = NAMES.reduce((a,n) => a+getValue(n,m.key), 0);
-    const max = Math.max(...NAMES.map(n => getValue(n,m.key)));
-    const top = NAMES.find(n => getValue(n,m.key) === max) || '—';
+    const total = NAMES.reduce((a,n) => a+getSum(n,m.key), 0);
+    const max = Math.max(...NAMES.map(n => getSum(n,m.key)));
+    const top = NAMES.find(n => getSum(n,m.key) === max) || '—';
     const avg = NAMES.length ? (total / NAMES.length).toFixed(1) : 0;
     html = `
       <div class="scard teal"><div class="scard-label">全隊累計</div><div class="scard-val">${total}</div><div class="scard-sub">${m.unit}（本月）</div></div>
@@ -420,7 +418,7 @@ function renderMain() {
         : region.names.map(name => {
             const val = getValue(name, m.key);
             const dispVal = m.key==='recv'
-              ? 'NT$ '+(val>=10000 ? Math.round(val/10000)+'萬' : val.toLocaleString())
+              ? 'NT$ '+val.toLocaleString()
               : val+' '+m.unit;
             return `<div class="rank-row">
               <span class="rank-name" style="min-width:52px">${name}</span>
@@ -511,7 +509,7 @@ function renderChart(m) {
              grid: { display: false },
              border: { color: 'rgba(0,0,0,0.08)' } },
         y: { ticks: { color: '#9ca3af', font:{size:10},
-               callback: v => m.key==='recv'&&v>=10000 ? Math.round(v/10000)+'萬' : v },
+               callback: v => v.toLocaleString() },
              grid: { color: 'rgba(0,0,0,0.05)' },
              border: { color: 'rgba(0,0,0,0.08)' } }
       }
@@ -529,6 +527,7 @@ loadData();
 </script>
 </body>
 </html>
+
 
 
 
